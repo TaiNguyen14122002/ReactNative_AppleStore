@@ -21,25 +21,25 @@
                 </tr>
               </thead>
               <tbody>
-                <% order.cartItems.forEach((item, index) => { %>
+                <% order.products.forEach((item, index) => { %>
                 <tr>
                   <td class="p-4">
                     <div class="d-flex flex-row align-items-center">
                       <div>
                         <!-- Display item image here -->
                         <!-- Replace the image source with the actual image URL -->
-                        <img src="https://halotravel.vn/wp-content/uploads/2020/11/bao-tang-dan-toc-hoc-viet-nam-8.jpg" class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
+                        <img src="<%=item.image %>" class="img-fluid rounded-3" alt="Shopping item" style="width: 65px;">
                       </div>
                       <div class="ms-3">
-                        <h5><%= item.ticket_Name %></h5>
-                        <p class="small mb-0"><%= item.Note %></p>
+                        <h5><%= item.name %></h5>
+                        <p class="small mb-0"><%= item.color %></p>
                       </div>
                     </div>
                     </div>
                   </td>
-                  <td class="text-right font-weight-semibold align-middle p-4"><%= item.Price %> VNĐ</td>
+                  <td class="text-right font-weight-semibold align-middle p-4"><%= item.price %> VNĐ</td>
                   <td class="align-middle p-4"><input type="text" class="form-control text-center" readonly value=<%= item.quantity %>></td>
-                  <td class="text-right font-weight-semibold align-middle p-4"><%= item.Price * item.quantity %> VNĐ</td>
+                  <td class="text-right font-weight-semibold align-middle p-4"><%= item.price * item.quantity %> VNĐ</td>
                   <td class="text-right font-weight-semibold align-middle p-4">
                     <% if (order.paymentMethod === "cash") { %>
                         Chuyển khoản <!-- Display this if payment method is "cash" -->

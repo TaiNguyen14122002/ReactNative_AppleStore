@@ -1,10 +1,52 @@
 <div class="container">
     <div class="row my-4">
-        <div class="col-lg-12">
-            <!-- Your main content here -->
-            <!-- Example: -->
-            <h1>Trang chủ</h1>
-            <p>This is the main content of your page.</p>
+      <div class="col-lg-12">
+        <div class="container text-center">
+          <h2>Order Summary</h2>
+          <canvas id="orderChart" width="400" height="200"></canvas>
         </div>
+  
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+          document.addEventListener("DOMContentLoaded", async function() {
+            try {
+              // Fetch data from server
+              const response = await fetch("/revenuePerDay");
+              const data = await response.json();
+  
+              // Extract labels and data from response
+              const labels = data.labels;
+              const dataValues = data.data;
+  
+              // Get chart context
+              const ctx = document.getElementById('orderChart').getContext('2d');
+  
+              // Create chart
+              new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: 'Doanh thu theo ngày',
+                    data: dataValues,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  scales: {
+                    y: {
+                      beginAtZero: true
+                    }
+                  }
+                }
+              });
+            } catch (error) {
+              console.error(error);
+            }
+          });
+        </script>
+      </div>
     </div>
 </div>

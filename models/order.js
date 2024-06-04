@@ -6,21 +6,25 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     require: true,
   },
-  cartItems: [
+  products: [
     {
-      Note:{
+      name:{
         type: String,
         required: true,
       },
-      Price: {
-        type: Number,
+      image: {
+        type: String,
         required: true,
       },
       quantity: {
         type: Number,
         required: true,
       },
-      ticket_Name: {
+      color: {
+        type: String,
+        required: true,
+      },
+      price: {
         type: String,
         required: true,
       },

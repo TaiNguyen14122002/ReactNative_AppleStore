@@ -26,6 +26,7 @@
                                         <th>ID</th>
                                         <th>Images</th>
                                         <th>Name</th>
+                                        <th>Price</th>
                                         <th>Information</th>
                                         <th>Action</th>
                                     </tr>
@@ -36,12 +37,18 @@
                                             <td>
                                                 <%= index %>
                                             </td>
-                                            <td><img src="<%= row.product_image %>" width="80" class="img-thumbnail" /></td>
+                                            <td><img src="<%= row.image %>" width="80" class="img-thumbnail" /></td>
                                             <td>
-                                                <%= row.product_Name %>
+                                                <%= row.title %>
                                             </td>
                                             <td>
-                                                <%= row.product_information %>
+                                                <%= row.price %>
+                                            </td>
+                                            <td>
+                                                <p>Color: <%= row.color %></p>
+                                                <p>Size: <%= row.size %></p>
+                                                <p>Category: <%= row.category %></p>
+                                                <p>Ram: <%= row.ram %></p>                                   
                                             </td>
                                             <td>
 

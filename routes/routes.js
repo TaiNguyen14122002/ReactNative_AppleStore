@@ -35,9 +35,15 @@ router.post("/add", async (req, res) => {
 router.post("/addProduct", async (req, res) => {
   try {
     const products = new Product({
-      product_Name: req.body.product_Name,
-      product_information: req.body.product_information,
-      product_image: req.body.product_image,
+      title: req.body.title,
+      size: req.body.ram,
+      image: req.body.product_image,
+      category: req.body.category,
+      ram: req.body.ram,
+      color: req.body.color,
+      price: req.body.price,
+      oldPrice : 0,
+
     });
     await products.save();
     req.session.message = {
@@ -59,7 +65,7 @@ router.post("/addProduct", async (req, res) => {
 // Route for rendering the index page
 router.get("/", async (req, res) => {
   try {
-    res.render("login", {
+    res.render("index", {
         title: "Home Page",
         page: "login",
     });
@@ -104,12 +110,13 @@ router.post('/login', async (req, res) => {
 
 // Route for rendering the index page
 router.get("/home", async (req, res) => {
-
+  const orders = await Order.find(); // Fetch orders from the database
   try {
 
     res.render("index", {
         title: "Home Page",
         page: "home",
+        orders: orders,
     });
   } catch (err) {
     console.error(err);
@@ -239,8 +246,9 @@ router.post("/update/product/:id", async (req, res) => {
     const updatedProduct = await Product.findByIdAndUpdate(
       id,
       {
-        product_Name: req.body.product_Name,
-        product_image: req.body.product_image,
+        title: req.body.title,
+        image: req.body.image,
+        price: req.body.price,
         product_information: req.body.product_information,
       },
       { new: true }
@@ -367,3 +375,49 @@ router.get("/addProduct", (req, res) => {
 });
 
 module.exports = router;
+
+router.post("/update-payment-method/:id", async (req, res) => {
+  try {
+    const orderId = req.params.id;
+    await Order.findByIdAndUpdate(orderId, { paymentMethod: "cash" });
+    req.session.message = {
+      type: "success",
+      message: "Hóa đơn đã thanh toán",
+    };
+    res.redirect("/order");
+  } catch (err) {
+    console.error(err);
+    req.session.message = {
+      type: "danger",
+      message: "Failed to update payment method",
+    };
+    res.redirect("/order"); // Redirect to user page or the appropriate page
+  }
+});
+
+router.get("/revenuePerDay", async (req, res) => {
+  try {
+    // Truy vấn các đơn hàng từ cơ sở dữ liệu
+    const orders = await Order.find();
+
+    // Tính toán tổng doanh thu theo ngày
+    const revenuePerDay = {};
+    orders.forEach(order => {
+      const date = order.createdAt.toISOString().split('T')[0]; // Lấy ngày từ trường createdAt
+      if (!revenuePerDay[date]) {
+        revenuePerDay[date] = 0;
+      }
+      revenuePerDay[date] += order.totalPrice; // Tính tổng doanh thu cho mỗi ngày
+    });
+
+    // Chuẩn bị dữ liệu cho biểu đồ
+    const labels = Object.keys(revenuePerDay);
+    const data = Object.values(revenuePerDay);
+
+    // Trả về dữ liệu cho client
+    res.json({ labels, data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to calculate revenue per day" });
+  }
+});
